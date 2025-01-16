@@ -42,14 +42,37 @@ The **Household Services Application** is a platform designed to connect custome
    cd household-services
    ```
 
-2. Install the required Python packages:
+2. Navigate to the `code` directory:
 
    ```bash
-   pip install -r requirements.txt
+   cd code
    ```
 
-3. **Configure the Database URI**:
-   - Open the `app.py` file located in the root directory.
+3. **Set up the virtual environment**:
+   - Create a virtual environment:
+
+     ```bash
+     python -m venv venv
+     ```
+
+   - Activate the virtual environment:
+     - On Windows:
+       ```bash
+       venv\Scripts\activate
+       ```
+     - On macOS/Linux:
+       ```bash
+       source venv/bin/activate
+       ```
+
+4. Install the required Python packages:
+
+   ```bash
+   python -m pip install -r requirements.txt --timeout 100 --no-cache-dir
+   ```
+
+5. **Configure the Database URI**:
+   - Open the `app.py` file located in the `code` directory.
    - Find the line where the database URI is set (it will look something like this):
      ```python
      app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///your_database.db'
@@ -59,16 +82,16 @@ The **Household Services Application** is a platform designed to connect custome
      app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////path/to/your/database.db'
      ```
 
-4. Set up the SQLite database by running the following:
+6. Set up the SQLite database by running the following:
 
    ```bash
    flask db upgrade
    ```
 
-5. Run the application locally:
+7. Run the application locally:
 
    ```bash
-   flask run
+   python app.py
    ```
 
    The application will be available at `http://127.0.0.1:5000/`.
