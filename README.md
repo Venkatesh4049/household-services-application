@@ -40,6 +40,7 @@ The **Household Services Application** is a platform designed to connect custome
    ```bash
    git clone https://github.com/venkatesh-am/household-services.git
    cd household-services
+   ```
 
 2. Install the required Python packages:
 
@@ -47,13 +48,24 @@ The **Household Services Application** is a platform designed to connect custome
    pip install -r requirements.txt
    ```
 
-3. Set up the SQLite database by running the following:
+3. **Configure the Database URI**:
+   - Open the `app.py` file located in the root directory.
+   - Find the line where the database URI is set (it will look something like this):
+     ```python
+     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///your_database.db'
+     ```
+   - Update the path to point to your local database file. For example, if your database is located at `/path/to/your/database.db`, change the line to:
+     ```python
+     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////path/to/your/database.db'
+     ```
+
+4. Set up the SQLite database by running the following:
 
    ```bash
    flask db upgrade
    ```
 
-4. Run the application locally:
+5. Run the application locally:
 
    ```bash
    flask run
