@@ -1,6 +1,3 @@
-Sure! Here's a `README.md` for your GitHub repository based on the project details you've provided:
-
-```markdown
 # Household Services Application
 
 ## Project Overview
@@ -43,7 +40,6 @@ The **Household Services Application** is a platform designed to connect custome
    ```bash
    git clone https://github.com/venkatesh-am/household-services.git
    cd household-services
-   ```
 
 2. Install the required Python packages:
 
