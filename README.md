@@ -126,6 +126,6 @@ You can view the demo video for the project here:
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-```
 
 Feel free to customize it further if needed!
+```
