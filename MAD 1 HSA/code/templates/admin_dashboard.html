@@ -1,0 +1,368 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2 class="text-center mb-4 text-light">Admin Dashboard</h2>
+<div class="col-md-12">
+    <div class="card mb-4 bg-dark text-light">
+        <div class="card-header text-center">
+            <h3>Manage Users</h3>
+            <input type="text" id="search-bar" placeholder="Search by username or role..." oninput="filterTable()" />
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered table-dark table-striped table-hover text-center align-middle">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="user-list">
+                    {% for user in users %}
+                        <tr data-username="{{ user.username|lower }}" data-role="{{ user.role|lower }}">
+                            <td>{{ user.username }}</td>
+                            <td>
+                                <span class="badge bg-secondary">{{ user.role }}</span>
+                            </td>
+                            <td>
+                                <span class="badge bg-{{ 'danger' if user.status == 'blocked' else 'success' }}">
+                                    {{ user.status }}
+                                </span>
+                            </td>
+                            <td>
+                                <!-- Block/Unblock Buttons -->
+                                {% if user.role != 'admin' %}
+                                    <form action="{{ url_for('block_user' if user.status != 'blocked' else 'unblock_user', user_id=user.id) }}" 
+                                          method="post" 
+                                          style="display:inline;">
+                                        {{ form.hidden_tag() }}
+                                        <button type="submit" class="btn btn-{{ 'danger' if user.status != 'blocked' else 'success' }} btn-sm">
+                                            {{ 'Block' if user.status != 'blocked' else 'Unblock' }}
+                                        </button>
+                                    </form>
+                                {% endif %}
+
+                                <!-- Professional-specific actions -->
+                                {% if user.role == 'professional' %}
+                                    <div class="mt-2">
+                                        <!-- Verify Profile Button -->
+                                        {% if not user.profile_verified %}
+                                            <form action="{{ url_for('verify_profile', user_id=user.id) }}" 
+                                                  method="post" 
+                                                  style="display:inline;">
+                                                {{ form.hidden_tag() }}
+                                                <button type="submit" class="btn btn-info btn-sm">Verify</button>
+                                            </form>
+                                        {% endif %}
+
+                                        <!-- Approve Button -->
+                                        {% if user.status != 'approved' and user.profile_verified %}
+                                            <form action="{{ url_for('approve_user', user_id=user.id) }}" 
+                                                  method="post" 
+                                                  style="display:inline;">
+                                                {{ form.hidden_tag() }}
+                                                <button type="submit" class="btn btn-primary btn-sm">Approve</button>
+                                            </form>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<br>
+<br><br>
+<div class="col-md-12">
+    <div class="card mb-4 bg-dark text-light">
+        <div class="card-header text-center">
+            <h3>All Service Requests</h3>
+        <div class="card-body">
+            <table class="table table-bordered table-dark table-striped table-hover text-center align-middle">
+                <thead>
+                    <tr>
+                        <th>Request ID</th>
+                        <th>Service</th>
+                        <th>Status</th>
+                        <th>Location</th>
+                        <th>Remarks</th>
+                        <th>Assigned To</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="request-list">
+                    {% for request in all_requests %}
+                        <tr data-request-id="{{ request.id }}" data-status="{{ request.status|lower }}">
+                            <td>{{ request.id }}</td>
+                            <td>{{ request.service.name }}</td>
+                            <td>
+                                <span class="badge bg-{{ 'danger' if request.status == 'pending' else 'info' if request.status == 'claimed' else 'success' }}">
+                                    {{ request.status }}
+                                </span>
+                            </td>
+                            <td>{{ request.location }}</td>
+                            <td>{{ request.remarks }}</td>
+                            <td>
+                                {% if request.professional %}
+                                    {{ request.professional.username }}
+                                {% else %}
+                                    No professional assigned
+                                {% endif %}
+                            </td>
+                            <td>
+                                <!-- Admin can close the service request -->
+                                {% if request.status not in ['completed', 'closed'] %}
+
+                                    <form action="{{ url_for('close_service_request', request_id=request.id) }}" method="post" style="display:inline;">
+                                        <button type="submit" class="btn btn-danger btn-sm">Close</button>
+                                    </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="7">No service requests available.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<br><br>
+    <!-- Professional Reviews & Ratings Section -->
+    <div class="col-md-6">
+        <div class="card mb-4 bg-dark text-light">
+            <div class="card-header text-center">
+                <h3 class="text-uppercase font-weight-bold mb-4">Professional Reviews & Ratings</h3>
+                <div class="text-center mb-4">
+                    <input type="text" id="admin-search" class="form-control w-50 mx-auto rounded-pill py-2" placeholder="Search service by service name..." oninput="filterAdminData()" />
+                </div>
+            </div>
+            <div class="card-body">
+                {% for professional in professionals %}
+                    <div class="accordion" id="accordion{{ professional.id }}">
+                        <div class="accordion-item bg-dark text-light mb-3 rounded-lg shadow-lg">
+                            <h2 class="accordion-header" id="heading{{ professional.id }}">
+                                <button class="accordion-button text-light bg-primary border-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ professional.id }}" aria-expanded="true" aria-controls="collapse{{ professional.id }}">
+                                    <strong>{{ professional.username }}</strong>
+                                </button>
+                            </h2>
+                            <div id="collapse{{ professional.id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ professional.id }}" data-bs-parent="#accordion{{ professional.id }}">
+                                <div class="accordion-body bg-dark text-light">
+                                    <ul id="review-list-{{ professional.id }}">
+                                        {% for review in reviews[professional.id] %}
+                                            <li class="review-item text-center bg-dark text-light py-3 mb-2 rounded-lg">
+                                                <p><strong>Service: {{ review.service.name }}</strong></p>
+                                                <p>Rating: <span class="badge bg-warning text-dark">{{ review.rating }} / 5</span></p>
+                                                <p>Review: {{ review.review or 'No review provided' }}</p>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+<!-- Create New Service Button -->
+<div class="text-center mt-4">
+    <a href="{{ url_for('create_service') }}" class="btn btn-primary">Create New Service</a>
+</div>
+<!-- Inline CSS Styling -->
+<style>
+    .card-header {
+        background-color: #343a40;
+        font-weight: bold;
+        text-align: center;
+        color: #fff;
+    }
+
+    .accordion-button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        text-align: center;
+    }
+
+    .accordion-button:not(.collapsed) {
+        background-color: #0056b3;
+    }
+
+    .card-body ul {
+        padding-left: 20px;
+    }
+
+    .list-group-item {
+        margin-bottom: 10px;
+    }
+
+    .badge {
+        font-size: 0.9rem;
+        color: #fff;
+    }
+
+    .btn-sm {
+        padding: 5px 10px;
+    }
+
+    .text-muted {
+        font-size: 0.9rem;
+        color: #ced4da;
+    }
+
+    .accordion-body {
+        padding: 15px;
+        background-color: #495057;
+    }
+
+    .accordion-item {
+        margin-bottom: 10px;
+    }
+
+    .accordion-button {
+        font-size: 1rem;
+    }
+
+    .accordion-body p {
+        text-align: center;
+    }
+
+    .text-center {
+        text-align: center !important;
+    }
+    .card {
+        border-radius: 10px;
+    }
+
+
+    .table {
+        width: 100%; 
+        margin-bottom: 0;
+    }
+
+    .table th, .table td {
+        vertical-align: middle;
+        border: 1px solid #444; 
+    }
+
+    .table thead th {
+        background-color: #222; 
+    }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: rgba(255, 255, 255, 0.05); 
+    }
+
+
+    #search-bar {
+        width: 80%;
+        margin: 10px auto;
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        color: #000; 
+    }
+#admin-search {
+    background-color: #222; 
+    border: 1px solid #444; 
+    font-size: 16px; 
+    color: #fff; 
+    transition: background-color 0.3s ease;
+}
+
+
+#admin-search:focus {
+    background-color: #333; 
+    border-color: #555; 
+    color: #fff;
+}
+
+
+.review-item {
+    background-color: #333;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.review-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+}
+
+
+.accordion-button {
+    padding: 15px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.accordion-button:hover {
+    background-color: #0069d9; 
+    transform: scale(1.05); 
+}
+
+.accordion-body {
+    padding: 15px;
+}
+
+.card-header h3 {
+    font-size: 1.5rem;
+    color: #fff;
+    font-weight: bold;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+
+.badge.bg-warning {
+    font-size: 1rem;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+</style>
+<script>
+    function filterTable() {
+        const query = document.getElementById('search-bar').value.toLowerCase();
+        const rows = document.querySelectorAll('#user-list tr');
+        rows.forEach(row => {
+            const username = row.getAttribute('data-username');
+            const role = row.getAttribute('data-role');
+            if (username.includes(query) || role.includes(query)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+    function filterAdminData() {
+        const searchQuery = document.getElementById('admin-search').value.toLowerCase();
+        const userItems = document.querySelectorAll('#user-list .list-group-item');
+        const reviewItems = document.querySelectorAll('[id^="review-list-"] li');
+        userItems.forEach(item => {
+            const username = item.getAttribute('data-username');
+            const role = item.getAttribute('data-role');
+            if (username.includes(searchQuery) || role.includes(searchQuery)) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+        reviewItems.forEach(item => {
+            const serviceName = item.getAttribute('data-service');
+            if (serviceName.includes(searchQuery)) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+</script>
+{% endblock %}

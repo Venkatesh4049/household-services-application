@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>Customer Dashboard</h2>
+    <h3>Assigned Services</h3>
+    <!-- Search Bar -->
+    <input type="text" id="search-bar" placeholder="Search services by name or location..." oninput="filterServices()" />
+    <!-- Carousel Container -->
+    <div id="service-carousel" class="carousel-container">
+        {% if service_requests %}
+            <div class="carousel-inner">
+                {% for request in service_requests[::-1] %}
+                    <div class="carousel-item {% if loop.first %}active{% endif %}" data-name="{{ request.service.name|lower }}" data-location="{{ request.location|lower }}">
+                        <div class="carousel-card">
+                            <h4>Service: {{ request.service.name }}</h4>
+                            <p>Status: <span class="badge bg-{{ 'success' if request.status == 'completed' else 'warning' }}">{{ request.status }}</span></p>
+                            <p>Location: {{ request.location }}</p>
+                            <p>Remarks: {{ request.remarks or 'No remarks provided.' }}</p>
+                            <small>Requested on: {{ request.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+                            <!-- Edit Button for Service -->
+                            {% if request.status != 'closed' %}
+                                    <a href="{{ url_for('edit_customer_service', service_id=request.id) }}" class="btn btn-warning mt-3">Edit Service</a>
+                                {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <!-- Carousel navigation buttons -->
+            <button class="carousel-control-prev" onclick="prevSlide()">&#10094;</button>
+            <button class="carousel-control-next" onclick="nextSlide()">&#10095;</button>
+        {% else %}
+            <p class="text-center">No assigned services.</p>
+        {% endif %}
+    </div>
+    <a href="{{ url_for('request_service') }}" class="btn btn-primary mt-3">Request a New Service</a>
+    <script>
+        let currentSlide = 0;
+        const items = document.querySelectorAll('.carousel-item');
+        // Show a specific slide
+        function showSlide(index) {
+            items.forEach((item, i) => {
+                item.classList.toggle('active', i === index);
+            });
+        }
+        // Show next slide
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % items.length;
+            showSlide(currentSlide);
+        }
+        // Show previous slide
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + items.length) % items.length;
+            showSlide(currentSlide);
+        }
+        // Filter carousel items based on search input
+        function filterCarousel() {
+            const searchQuery = document.getElementById('search-bar').value.toLowerCase();
+            items.forEach(item => {
+                const serviceName = item.getAttribute('data-service');
+                if (serviceName.includes(searchQuery)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+        function filterServices() {
+            const query = document.getElementById('search-bar').value.toLowerCase();
+            const items = document.querySelectorAll('.carousel-item');
+        
+            items.forEach(item => {
+                const name = item.getAttribute('data-name');
+                const location = item.getAttribute('data-location');
+                if (name.includes(query) || location.includes(query)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+    </script>
+<style>
+    h3 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #fff; 
+    }
+
+    .search-container {
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    #search-bar {
+        width: 80%;
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        margin: 0 auto;
+        display: block;
+        color: #333;
+    }
+
+    .carousel-container {
+        position: relative;
+        margin: 20px auto;
+        max-width: 600px;
+    }
+
+    .carousel-inner {
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .carousel-item {
+        display: block;
+        padding: 15px;
+        text-align: left;
+        background: #333;
+        color: #fff;
+        border: 1px solid #555;
+        border-radius: 5px;
+        margin: 10px auto;
+    }
+
+    .carousel-item.active {
+        display: block;
+    }
+
+    .carousel-card {
+        padding: 20px;
+        background: #444; 
+        border: 1px solid #555;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        color: #fff; 
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+        z-index: 10;
+    }
+
+    .carousel-control-prev {
+        left: -40px;
+    }
+
+    .carousel-control-next {
+        right: -40px;
+    }
+
+    .btn-warning {
+        margin-top: 15px;
+        background-color: #f0ad4e;
+        color: white;
+    }
+
+    .btn-warning:hover {
+        background-color: #ec971f;
+        color: white;
+    }
+
+    .request-card {
+        background-color: #333;
+        color: #fff;
+        padding: 15px;
+        margin: 10px auto;
+        border: 1px solid #555;
+        border-radius: 5px;
+        max-width: 600px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .request-card h4 {
+        font-size: 1.2em;
+        margin-bottom: 10px;
+    }
+
+    .request-card p {
+        margin: 5px 0;
+    }
+
+    .btn {
+        display: inline-block;
+        margin-top: 10px;
+    }
+</style>
+{% endblock %}
