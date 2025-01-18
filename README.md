@@ -117,6 +117,15 @@ The application has been tested locally to ensure the proper functioning of the 
 
 - **Data Analytics**: Implement data analytics to track service usage trends and user satisfaction.
 - **Service Feedback**: Allow customers to leave feedback on completed services to improve the platform’s user engagement.
+## Screenshots
+
+- ![Admin Services Screenshot](household-services-application/Screenshots/login.png)
+- ![Admin Services Screenshot](household-services-application/Screenshots/admin_services.png)
+- ![Admin Services Screenshot](household-services-application/Screenshots/admin_services.png)
+- ![Admin Services Screenshot](household-services-application/Screenshots/admin_services.png)
+- ![Admin Services Screenshot](household-services-application/Screenshots/admin_services.png)
+- ![Admin Services Screenshot](household-services-application/Screenshots/admin_services.png)
+
 
 ## Project Video
 
