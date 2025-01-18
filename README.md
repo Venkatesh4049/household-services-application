@@ -119,22 +119,22 @@ The application has been tested locally to ensure the proper functioning of the 
 - **Service Feedback**: Allow customers to leave feedback on completed services to improve the platform’s user engagement.
 ## Screenshots
 
-- ![Admin Services Screenshot](Screenshots/login.png)
+ ![login](Screenshots/login.png)
 
   
-- ![Admin Services Screenshot](Screenshots/register.png)
+ ![register](Screenshots/register.png)
   
   
-- ![Admin Services Screenshot](Screenshots/admin_dashboard.png)
+ ![admin_dashboard](Screenshots/admin_dashboard.png)
 
   
-- ![Admin Services Screenshot](Screenshots/admin_services.png)
+ ![admin_services](Screenshots/admin_services.png)
 
   
-- ![Admin Services Screenshot](Screenshots/customerdashboard.png)
+ ![customerdashboard](Screenshots/customerdashboard.png)
 
   
-- ![Admin Services Screenshot](Screenshots/professional_dashboard.png)
+ ![professional_dashboard](Screenshots/professional_dashboard.png)
 
 
 ## Project Video
