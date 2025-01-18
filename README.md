@@ -122,9 +122,9 @@ The application has been tested locally to ensure the proper functioning of the 
 - ![Admin Services Screenshot](Screenshots/login.png)
 - ![Admin Services Screenshot](Screenshots/register.png)
 - ![Admin Services Screenshot](Screenshots/admin_dashboard.png)
-- ![Admin Services Screenshot](household-services-application/Screenshots/admin_services.png)
-- ![Admin Services Screenshot](household-services-application/Screenshots/admin_services.png)
-- ![Admin Services Screenshot](household-services-application/Screenshots/admin_services.png)
+- ![Admin Services Screenshot](Screenshots/admin_services.png)
+- ![Admin Services Screenshot](Screenshots/customerdashboard.png)
+- ![Admin Services Screenshot](Screenshots/professional_dashboard.png)
 
 
 ## Project Video
