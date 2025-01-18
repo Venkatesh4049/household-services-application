@@ -72,7 +72,7 @@ The **Household Services Application** is a platform designed to connect custome
    ```
 
 5. **Configure the Database URI**:
-   - Open the `app.py` file located in the `code` directory.
+   - Open the `run.py` file located in the `code` directory.
    - Find the line where the database URI is set (it will look something like this):
      ```python
      app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///your_database.db'
@@ -91,7 +91,7 @@ The **Household Services Application** is a platform designed to connect custome
 7. Run the application locally:
 
    ```bash
-   python app.py
+   python run.py
    ```
 
    The application will be available at `http://127.0.0.1:5000/`.
