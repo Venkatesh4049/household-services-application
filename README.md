@@ -119,7 +119,7 @@ The application has been tested locally to ensure the proper functioning of the 
 - **Service Feedback**: Allow customers to leave feedback on completed services to improve the platform’s user engagement.
 ## Screenshots
 
-- ![Admin Services Screenshot](household-services-application/Screenshots/login.png)
+- ![Admin Services Screenshot](Screenshots/login.png)
 - ![Admin Services Screenshot](household-services-application/Screenshots/admin_services.png)
 - ![Admin Services Screenshot](household-services-application/Screenshots/admin_services.png)
 - ![Admin Services Screenshot](household-services-application/Screenshots/admin_services.png)
