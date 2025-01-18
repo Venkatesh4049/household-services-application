@@ -118,24 +118,24 @@ The application has been tested locally to ensure the proper functioning of the 
 - **Data Analytics**: Implement data analytics to track service usage trends and user satisfaction.
 - **Service Feedback**: Allow customers to leave feedback on completed services to improve the platform’s user engagement.
 ## Screenshots
-
+---
  ![login](Screenshots/login.png)
-
+---
   
  ![register](Screenshots/register.png)
-  
+  ---
   
  ![admin_dashboard](Screenshots/admin_dashboard.png)
-
+---
   
  ![admin_services](Screenshots/admin_services.png)
-
+---
   
  ![customerdashboard](Screenshots/customerdashboard.png)
-
+---
   
  ![professional_dashboard](Screenshots/professional_dashboard.png)
-
+---
 
 ## Project Video
 
