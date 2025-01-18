@@ -1,0 +1,42 @@
+<!-- templates/admin/dashboard.html -->
+
+{% extends "layout.html" %}
+{% block content %}
+<h2>Admin Dashboard</h2>
+
+<!-- Section to manage services -->
+<h3>Manage Services</h3>
+<a href="{{ url_for('admin.create_service') }}">Create New Service</a>
+<ul>
+    {% for service in services %}
+    <li>
+        <strong>{{ service.name }}</strong> - {{ service.price }} - {{ service.time_required }} mins
+        <a href="{{ url_for('admin.edit_service', id=service.id) }}">Edit</a> |
+        <a href="{{ url_for('admin.delete_service', id=service.id) }}">Delete</a>
+    </li>
+    {% endfor %}
+</ul>
+
+<!-- Section to manage professionals -->
+<h3>Manage Service Professionals</h3>
+<ul>
+    {% for professional in professionals %}
+    <li>
+        <strong>{{ professional.name }}</strong> - {{ professional.service_type }}
+        <a href="{{ url_for('admin.approve_professional', id=professional.id) }}">Approve</a> |
+        <a href="{{ url_for('admin.block_user', id=professional.user_id) }}">Block</a>
+    </li>
+    {% endfor %}
+</ul>
+
+<!-- Section to manage customers -->
+<h3>Manage Customers</h3>
+<ul>
+    {% for customer in customers %}
+    <li>
+        <strong>{{ customer.username }}</strong>
+        <a href="{{ url_for('admin.block_user', id=customer.id) }}">Block</a>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
