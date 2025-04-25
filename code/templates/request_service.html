@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>Request Service</h2>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <label for="service_id">Service:</label>
+        {{ form.service_id() }}
+        <label for="location">Location:</label>
+        {{ form.location() }}
+        <label for="remarks">Remarks:</label>
+        {{ form.remarks() }}
+        <button type="submit">Submit Request</button>
+    </form>
+{% endblock %}
